@@ -11,7 +11,7 @@ function NavBar() {
 
     return (
         <div className='w-4/5 mx-auto'>
-            <div className="navbar bg-base-100">
+            <div className="navbar bg-base-200 px-8 rounded-xl">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -33,7 +33,7 @@ function NavBar() {
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                             {navItems.map((item, index) => (
                                 <li key={index}>
-                                    <Link to={item.path}>{item.name}</Link>
+                                    <Link className='font-semibold' to={item.path}>{item.name}</Link>
                                 </li>
                             ))}
                         </ul>
@@ -44,7 +44,7 @@ function NavBar() {
                     <ul className="menu menu-horizontal px-1">
                         {navItems.map((item, index) => (
                             <li key={index}>
-                                <Link to={item.path}>{item.name}</Link>
+                                <Link className='font-semibold'  to={item.path}>{item.name}</Link>
                             </li>
                         ))}
                     </ul>
