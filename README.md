@@ -71,5 +71,4 @@ The application interacts with the following API endpoints:
 Ensure you have the backend server running and accessible to the frontend.
 
 ## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Now the application is free to use.
