@@ -8,6 +8,7 @@ import {
 import Main from './layout/Main';
 import AllContacts from './pages/AllContacts';
 import AddContact from './pages/AddContact';
+import { HelmetProvider } from 'react-helmet-async';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <HelmetProvider>
+      <RouterProvider router={router} />
+    </HelmetProvider>
   </StrictMode>,
 )
