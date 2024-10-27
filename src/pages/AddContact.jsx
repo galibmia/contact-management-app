@@ -10,7 +10,6 @@ const img_hosting_token = import.meta.env.VITE_Img_Hosting_Token;
 function AddContact() {
   const img_hosting_url = `https://api.imgbb.com/1/upload?key=${img_hosting_token}`;
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const {
     register,
     handleSubmit,
@@ -19,11 +18,13 @@ function AddContact() {
   } = useForm();
   const navigate = useNavigate();
 
+  // Handle form submission to add a new contact
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append("image", data.image[0]);
     setLoading(true);
-  
+
+    // Upload image to hosting service
     fetch(img_hosting_url, {
       method: "POST",
       body: formData,
@@ -34,10 +35,11 @@ function AddContact() {
           const imgUrl = imgResponse.data.url;
           const { name, email, phone, address } = data;
           const newItem = { name, email, image: imgUrl, phone, address };
-  
-          // Retrieve the JWT token from localStorage
+
+          // Retrieve JWT token from localStorage
           const token = localStorage.getItem("token");
-  
+
+          // Add new contact to the database
           fetch("https://contact-management-app-server.vercel.app/contacts", {
             method: "POST",
             headers: {
@@ -48,7 +50,7 @@ function AddContact() {
           })
             .then((res) => {
               if (!res.ok) {
-                return res.json().then(errorData => {
+                return res.json().then((errorData) => {
                   throw new Error(errorData.message || "Failed to add contact");
                 });
               }
@@ -90,6 +92,7 @@ function AddContact() {
       });
   };
 
+  // Show loading spinner while processing
   if (loading) {
     return <Loading />;
   }
@@ -100,11 +103,12 @@ function AddContact() {
         <title>Add Contact | CMA</title>
       </Helmet>
       <h2 className="text-2xl font-bold mb-4 text-center">Add New Contact</h2>
-      {error && <p className="text-red-500">{error}</p>}
+
       <form
         className="card-body bg-base-200 px-10"
         onSubmit={handleSubmit(onSubmit)}
       >
+        {/* Name Field */}
         <div className="form-control">
           <label className="label">
             <span className="label-text">
@@ -123,11 +127,10 @@ function AddContact() {
             })}
             className="input rounded-none focus:ring-0 focus:border-0 focus:outline-none focus:shadow-md"
           />
-          {errors.name && (
-            <p className="text-red-600 ps-1">{errors.name.message}</p>
-          )}
+          {errors.name && <p className="text-red-600 ps-1">{errors.name.message}</p>}
         </div>
 
+        {/* Email Field */}
         <div className="form-control">
           <label className="label">
             <span className="label-text">
@@ -146,11 +149,10 @@ function AddContact() {
             })}
             className="input rounded-none focus:ring-0 focus:border-0 focus:outline-none focus:shadow-md"
           />
-          {errors.email && (
-            <p className="text-red-600 ps-1">{errors.email.message}</p>
-          )}
+          {errors.email && <p className="text-red-600 ps-1">{errors.email.message}</p>}
         </div>
 
+        {/* Phone Field */}
         <div className="form-control">
           <label className="label">
             <span className="label-text">
@@ -159,7 +161,7 @@ function AddContact() {
           </label>
           <input
             type="tel"
-            placeholder="Enter Phone number(01*********)"
+            placeholder="Enter Phone number (01*********)"
             {...register("phone", {
               required: "Phone number is required",
               minLength: {
@@ -177,11 +179,10 @@ function AddContact() {
             })}
             className="input rounded-none focus:ring-0 focus:border-0 focus:outline-none focus:shadow-md"
           />
-          {errors.phone && (
-            <p className="text-red-600 ps-1">{errors.phone.message}</p>
-          )}
+          {errors.phone && <p className="text-red-600 ps-1">{errors.phone.message}</p>}
         </div>
 
+        {/* Address Field */}
         <div className="form-control">
           <label className="label">
             <span className="label-text">
@@ -200,11 +201,10 @@ function AddContact() {
             })}
             className="input rounded-none focus:ring-0 focus:border-0 focus:outline-none focus:shadow-md"
           />
-          {errors.address && (
-            <p className="text-red-600 ps-1">{errors.address.message}</p>
-          )}
+          {errors.address && <p className="text-red-600 ps-1">{errors.address.message}</p>}
         </div>
 
+        {/* Image Upload Field */}
         <div className="form-control">
           <label className="label">
             <span className="label-text">
@@ -216,11 +216,10 @@ function AddContact() {
             {...register("image", { required: "Image is required" })}
             className="file-input file-input-bordered w-full max-w-xs focus:outline-none"
           />
-          {errors.image && (
-            <p className="text-red-600 ps-1">{errors.image.message}</p>
-          )}
+          {errors.image && <p className="text-red-600 ps-1">{errors.image.message}</p>}
         </div>
 
+        {/* Submit Button */}
         <div className="form-control mt-4">
           <button
             type="submit"

@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { FaStar } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { TbUserEdit } from "react-icons/tb";
-import { useOutletContext } from "react-router-dom"; // Import to use Outlet context
+import { useOutletContext } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loading from "../components/Loading";
 
@@ -14,35 +14,33 @@ function AllContacts() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [updatedData, setUpdatedData] = useState({});
   const [filter, setFilter] = useState("all");
-  const { token } = useOutletContext(); // Get the token from the context
+  const { token } = useOutletContext();
 
+  // Fetch contacts from the server
   const fetchContacts = () => {
     fetch("https://contact-management-app-server.vercel.app/contacts", {
       headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the headers
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
-      .then((data) => {
-        setContacts(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching contacts:", error);
-      });
+      .then(setContacts)
+      .catch((error) => console.error("Error fetching contacts:", error));
   };
 
+  // Fetch contacts when the token is available
   useEffect(() => {
-    if (token) {
-      fetchContacts(); // Fetch contacts when the token is available
-    }
-  }, [token]); 
+    if (token) fetchContacts();
+  }, [token]);
 
+  // Handle opening the update modal
   const handleUpdate = (contact) => {
     setSelectedContact(contact);
     setUpdatedData(contact);
     setModalOpen(true);
   };
 
+  // Handle deleting a contact
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -69,6 +67,7 @@ function AllContacts() {
     });
   };
 
+  // Handle modal form submission to update contact
   const handleModalSubmit = (e) => {
     e.preventDefault();
     const { name, email, phone, address, image } = updatedData;
@@ -77,45 +76,43 @@ function AllContacts() {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Include the token
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ name, email, phone, address, image }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         fetchContacts();
         setModalOpen(false);
         Swal.fire("Updated!", "Your contact has been updated.", "success");
       });
   };
 
+  // Handle input changes in the update modal
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedData({
-      ...updatedData,
-      [name]: value,
-    });
+    setUpdatedData({ ...updatedData, [name]: value });
   };
 
+  // Toggle contact's favorite status
   const toggleFavorite = (contact) => {
     fetch(`https://contact-management-app-server.vercel.app/contacts/${contact._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Include the token
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ isFavorite: !contact.isFavorite }),
     })
       .then((res) => res.json())
       .then(() => {
         fetchContacts();
-        const message = contact.isFavorite
-          ? "Removed from favorites!"
-          : "Added to favorites!";
+        const message = contact.isFavorite ? "Removed from favorites!" : "Added to favorites!";
         Swal.fire("Success!", message, "success");
       });
   };
 
+  // Apply filter for displaying contacts
   const filteredContacts = contacts?.filter((contact) =>
     filter === "all" ? true : contact.isFavorite
   );
@@ -165,7 +162,6 @@ function AllContacts() {
                 className="object-cover h-96 w-full"
               />
             </motion.figure>
-
             <motion.div
               className="card-body"
               initial={{ opacity: 0, y: 20 }}
@@ -179,9 +175,7 @@ function AllContacts() {
                   onClick={() => toggleFavorite(contact)}
                 >
                   <FaStar
-                    className={
-                      contact.isFavorite ? "fill-current" : "text-gray-300"
-                    }
+                    className={contact.isFavorite ? "fill-current" : "text-gray-300"}
                   />
                 </button>
               </div>
@@ -189,16 +183,10 @@ function AllContacts() {
               <p>Phone: {contact.phone}</p>
               <p>Address: {contact.address}</p>
               <div className="card-actions justify-center mt-2">
-                <button
-                  className="btn bg-violet-400"
-                  onClick={() => handleUpdate(contact)}
-                >
+                <button className="btn bg-violet-400" onClick={() => handleUpdate(contact)}>
                   <TbUserEdit className="text-xl" /> Update
                 </button>
-                <button
-                  className="btn text-white btn-error"
-                  onClick={() => handleDelete(contact._id)}
-                >
+                <button className="btn text-white btn-error" onClick={() => handleDelete(contact._id)}>
                   <MdDeleteForever className="text-xl" /> Delete
                 </button>
               </div>
@@ -258,7 +246,7 @@ function AllContacts() {
             </div>
             <div className="modal-action">
               <button type="submit" className="btn">Save</button>
-              <button className="btn">Cancel</button>
+              <button className="btn" onClick={() => setModalOpen(false)} >Cancel</button>
             </div>
           </form>
         </dialog>
