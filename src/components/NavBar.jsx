@@ -5,14 +5,14 @@ function NavBar() {
 
     // Nav items
     const navItems = [
-        { name: "Add Contacts", path: "/addContact" },
-        { name: "All Contacts", path: "/" }
+        { name: "All Contacts", path: "/" },
+        { name: "Add Contacts", path: "/addContact" }
     ];
 
     return (
-        <div className='w-4/5 mx-auto'>
-            <div className="navbar bg-base-200 px-8 rounded-xl">
-                <div className="navbar-start">
+        <div className=' md:w-4/5 mx-auto'>
+            <div className="navbar bg-base-200 lg:px-8 rounded-xl">
+                <div className="md:navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
                             <svg
@@ -38,13 +38,13 @@ function NavBar() {
                             ))}
                         </ul>
                     </div>
-                    <Link to='/' className="text-2xl font-semibold">Contact Management App</Link>
+                    <Link to='/' className="text-lg md:text-2xl font-semibold">Contact Management App</Link>
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1">
                         {navItems.map((item, index) => (
                             <li key={index}>
-                                <Link className='font-semibold'  to={item.path}>{item.name}</Link>
+                                <Link className='font-semibold md:ml-1'  to={item.path}>{item.name}</Link>
                             </li>
                         ))}
                     </ul>
